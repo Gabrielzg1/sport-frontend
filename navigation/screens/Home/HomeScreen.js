@@ -13,12 +13,12 @@ export default function HomeScreen({ navigation }) {
 	const [apiname, setApiname] = useState("users");
 
 	const optionsSelector = [
-		{ label: "User", activeColor: "red" },
-		{ label: "Admin", activeColor: "green" },
+		{ label: "User", value: "User", activeColor: "red" },
+		{ label: "Admin", value: "Admin", activeColor: "green" },
 	];
 
 	return (
-		<View style={{ flex: 0.9, alignItems: "center", justifyContent: "center" }}>
+		<View style={{ flex: 0.7, alignItems: "center", justifyContent: "center" }}>
 			<Text style={{ fontSize: 20, fontWeight: "bold" }}>
 				Bem vindo, digite seu email
 			</Text>
@@ -28,7 +28,7 @@ export default function HomeScreen({ navigation }) {
 				initial={0}
 				onPress={(value) => {
 					setType(value);
-					if (value == "RA") {
+					if (value == "User") {
 						setColor("red");
 						setOption("User");
 						setApiname("users");
@@ -73,6 +73,8 @@ export default function HomeScreen({ navigation }) {
 				title="Enter"
 				color={color}
 				onPress={() => {
+					console.log(email);
+					console.log(password);
 					navigation.navigate({ name: option });
 					/*if (text == "") {
             alert("Texto vázio");

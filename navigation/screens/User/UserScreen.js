@@ -28,7 +28,7 @@ export default function UserScreen({ navigation, route }) {
 */
 	return (
 		<View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-			<Text style={{ margin: 1 }}>User Screen</Text>
+			<Text style={{ fontSize: 26, fontWeight: "bold" }}>User Screen</Text>
 		</View>
 	);
 }
