@@ -1,34 +1,53 @@
 import * as React from "react";
-import { useState, useEffect } from "react";
-import { View, Text, Image, Button } from "react-native";
-import api from "../../../api/api";
+import { useState } from "react";
+import { Text, TextInput, View, ScrollView, Button } from "react-native";
+import axios from "axios";
 
 export default function UserScreen({ navigation, route }) {
-	/*const [username, setUsername] = useState("");
-  const [qrcode, setQrcode] = useState(
-    "https://i.pinimg.com/564x/67/d8/37/67d8379604084dd7d7c7fa8d41f4c739.jpg"
-  );
+  const [review, setReview] = useState("");
 
-  const handleStudents = async () => {
+  const handleSubmitReview = async () => {
     try {
-      const response = await api.get(
-        `/students/${parseInt(route.params?.text)}`
-      );
-      console.log(typeof parseInt(route.params?.text));
-      setQrcode(response.data.img);
-      setUsername(response.data.name);
+      const response = await axios.post(`http://10.0.2.2:2020/reviews`, {
+        review,
+      });
+      console.log(response.data);
     } catch (error) {
-      console.log(error);
+      console.error(error.response.status);
     }
   };
 
-  useEffect(() => {
-    (async () => await handleStudents())();
-  }, [route.params?.text]);
-*/
-	return (
-		<View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-			<Text style={{ fontSize: 26, fontWeight: "bold" }}>User Screen</Text>
-		</View>
-	);
+  return (
+    <ScrollView style={{ flex: 1 }}>
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+          padding: 20,
+        }}
+      >
+        <Text style={{ fontSize: 26, fontWeight: "bold", textAlign: "center" }}>
+          User Screen
+        </Text>
+        <Text style={{ fontSize: 15, paddingTop: 100, textAlign: "center" }}>
+          Review
+        </Text>
+        <TextInput
+          value={review}
+          onChangeText={setReview}
+          placeholder="Review"
+          style={{
+            height: 60, // Adjusted height
+            margin: 10,
+            width: 280, // Adjusted width
+            borderWidth: 1,
+            padding: 10,
+            fontSize: 18, // Adjusted font size
+          }}
+        />
+        <Button title="Enter" onPress={handleSubmitReview} />
+      </View>
+    </ScrollView>
+  );
 }
