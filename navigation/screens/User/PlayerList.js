@@ -16,7 +16,7 @@ import {
 const PlayerList = ({ players }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedPlayer, setSelectedPlayer] = useState(null);
-  const [searchTerm, setSearchTerm] = useState(""); // novo estado para o termo de pesquisa
+  const [searchTerm, setSearchTerm] = useState(null); // novo estado para o termo de pesquisa
   const [filteredPlayers, setFilteredPlayers] = useState(players); // novo estado para os jogadores filtrados
 
   const handlePlayerPress = (player) => {
