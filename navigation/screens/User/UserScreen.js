@@ -1,66 +1,91 @@
 import * as React from "react";
-import { useState } from "react";
-import { Text, TextInput, View, ScrollView, Button, Alert } from "react-native"; // Import Alert from React Native
+import { useState, useEffect } from "react";
+import { Text, TextInput, View, Button, StyleSheet, Alert } from "react-native";
 import axios from "axios";
+import PlayerList from "./PlayerList";
 
 export default function UserScreen({ navigation, route }) {
-	const [review, setReview] = useState("");
+  const [review, setReview] = useState("");
+  const [players, setPlayers] = useState([]);
 
-	const handleSubmitReview = async () => {
-		try {
-			const response = await axios.post(`http://10.0.2.2:2020/reviews`, {
-				review,
-			});
+  const handleSubmitReview = async () => {
+    try {
+      const response = await axios.post(`http://10.0.2.2:2020/reviews`, {
+        review,
+      });
+      Alert.alert(
+        "Review Submitted",
+        "Your review has been submitted successfully!"
+      );
+      setReview("");
+    } catch (error) {
+      console.log(error);
+      Alert.alert("Error", "There was an error submitting your review.");
+    }
+  };
 
-			// Display success popup when review is sent successfully
-			Alert.alert(
-				"Success", // Title
-				"Review enviado com sucesso!", // Message
-				[
-					{ text: "OK" }, // Button
-				]
-			);
-		} catch (error) {
-			console.error(error.response.status);
+  const loadData = async () => {
+    try {
+      const response = await axios.get(`http://10.0.2.2:2020/players`);
+      setPlayers(response.data);
+    } catch (error) {
+      console.log(error);
+      Alert.alert("Error", "Could not load players data.");
+    }
+  };
 
-			// Optionally, you can also display an error popup if the review sending fails
-			Alert.alert("Error", "Failed to send the review. Please try again.", [
-				{ text: "OK" },
-			]);
-		}
-	};
+  useEffect(() => {
+    loadData();
+  }, []);
 
-	return (
-		<ScrollView style={{ flex: 1 }}>
-			<View
-				style={{
-					flex: 1,
-					justifyContent: "center",
-					alignItems: "center",
-					padding: 20,
-				}}
-			>
-				<Text style={{ fontSize: 26, fontWeight: "bold", textAlign: "center" }}>
-					User Screen
-				</Text>
-				<Text style={{ fontSize: 15, paddingTop: 100, textAlign: "center" }}>
-					Review
-				</Text>
-				<TextInput
-					value={review}
-					onChangeText={setReview}
-					placeholder="Review"
-					style={{
-						height: 60,
-						margin: 10,
-						width: 280,
-						borderWidth: 1,
-						padding: 10,
-						fontSize: 18,
-					}}
-				/>
-				<Button title="Enter" onPress={handleSubmitReview} />
-			</View>
-		</ScrollView>
-	);
+  return (
+    <View style={styles.container}>
+      <Text style={styles.header}>Players</Text>
+      <PlayerList players={players} />
+      <Text style={styles.reviewLabel}>Review</Text>
+      <TextInput
+        value={review}
+        onChangeText={setReview}
+        placeholder="Write your review here"
+        style={styles.input}
+        multiline
+      />
+      <Button
+        title="Submit Review"
+        onPress={handleSubmitReview}
+        color="#1E90FF"
+      />
+    </View>
+  );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: "center",
+    padding: 20,
+    backgroundColor: "#f5f5f5",
+  },
+  header: {
+    fontSize: 26,
+    fontWeight: "bold",
+    textAlign: "center",
+    marginVertical: 20,
+  },
+  reviewLabel: {
+    fontSize: 18,
+    paddingTop: 20,
+    alignSelf: "flex-start",
+  },
+  input: {
+    height: 100,
+    marginVertical: 10,
+    width: "90%",
+    borderWidth: 1,
+    borderColor: "#ddd",
+    padding: 10,
+    fontSize: 16,
+    borderRadius: 10,
+    backgroundColor: "#fff",
+  },
+});
