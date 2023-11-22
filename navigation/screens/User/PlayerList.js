@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import {
+	ScrollView,
 	Alert,
 	Button,
 	View,
@@ -23,7 +24,7 @@ const PlayerList = ({ players }) => {
 	const [filteredPlayers, setFilteredPlayers] = useState(players); // novo estado para os jogadores filtrados
 	const [suggestion, setSuggestion] = useState("");
     const [playername, setPlayerName] = useState("");
-
+	const [isTableVisible, setIsTableVisible] = useState(false);
 
 	const handlePlayerPress = (player) => {
 		setSelectedPlayer(player);
@@ -34,6 +35,7 @@ const PlayerList = ({ players }) => {
 	useEffect(() => {
 		setFilteredPlayers(players);
 	}, [players]);
+
 	const handleSearch = (text) => {
 		setSearchTerm(text);
 		if (text) {
@@ -64,8 +66,31 @@ const PlayerList = ({ players }) => {
 		}
 	};
 
-	const Touchable =
-		Platform.OS === "android" ? TouchableNativeFeedback : TouchableOpacity;
+	const ordenarPorGols = () => {
+        const jogadoresOrdenados = [...players].sort((a, b) => b.goals - a.goals);
+        setFilteredPlayers(jogadoresOrdenados);
+        setIsTableVisible(true);
+    };
+
+	const ocultarTabela = () => {
+		setIsTableVisible(false);
+	};
+
+	const TabelaJogadores = () => (
+		<ScrollView style={styles.scrollView}>
+        <View style={styles.tabelaContainer}>
+            <Text style={styles.tabelaHeader}>Jogadores</Text>
+            {filteredPlayers.map((jogador) => (
+                <View key={jogador.id} style={styles.tabelaRow}>
+                    <Text style={styles.tabelaCell}>{jogador.name}</Text>
+                    <Text style={styles.tabelaCell}>{jogador.goals}</Text>
+                </View>
+            ))}
+        </View>
+		</ScrollView>
+    );
+
+	const Touchable = Platform.OS === "android" ? TouchableNativeFeedback : TouchableOpacity;
 
 	const renderItem = ({ item }) => (
 		<Touchable onPress={() => handlePlayerPress(item)}>
@@ -84,12 +109,20 @@ const PlayerList = ({ players }) => {
 				placeholder="Search Players"
 				onChangeText={(text) => handleSearch(text)}
 			/>
-			<FlatList
-				data={filteredPlayers}
-				renderItem={renderItem}
-				keyExtractor={(item) => item.id.toString()}
-				ItemSeparatorComponent={() => <View style={styles.separator} />}
-			/>
+			  <Button
+                title={isTableVisible ? "Ocultar Tabela" : "Mostrar Tabela de Jogadores por Gols"}
+                onPress={() => setIsTableVisible(!isTableVisible)}
+            />
+            {isTableVisible ? (
+                <TabelaJogadores />
+            ) : (
+            <FlatList
+                data={filteredPlayers}
+                renderItem={renderItem}
+                keyExtractor={(item) => item.id.toString()}
+                ItemSeparatorComponent={() => <View style={styles.separator} />}
+            />
+			)}
 			<Modal
 				animationType="fade"
 				transparent={true}
@@ -137,6 +170,35 @@ const PlayerList = ({ players }) => {
 
 const styles = StyleSheet.create({
 	// ... seus estilos existentes
+	scrollView: {
+		maxHeight: '100%',
+	},
+	tabelaContainer: {
+        backgroundColor: "white",
+        margin: 10,
+        padding: 10,
+        borderRadius: 10,
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.2,
+        shadowRadius: 1.41,
+        elevation: 2,
+    },
+    tabelaHeader: {
+        fontSize: 18,
+        fontWeight: "bold",
+        marginBottom: 10,
+    },
+    tabelaRow: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        paddingVertical: 8,
+        borderBottomWidth: 1,
+        borderBottomColor: "#ccc",
+    },
+    tabelaCell: {
+        fontSize: 16,
+    },
 	buttonsug: {
 		margin: 10,
 	},
