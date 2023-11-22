@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import {
+	Alert,
+	Button,
 	View,
 	Text,
 	FlatList,
@@ -12,16 +14,21 @@ import {
 	TouchableNativeFeedback,
 	TextInput, // importação adicional para o campo de texto
 } from "react-native";
+import axios from "axios";
 
 const PlayerList = ({ players }) => {
 	const [modalVisible, setModalVisible] = useState(false);
 	const [selectedPlayer, setSelectedPlayer] = useState(null);
 	const [searchTerm, setSearchTerm] = useState(null); // novo estado para o termo de pesquisa
 	const [filteredPlayers, setFilteredPlayers] = useState(players); // novo estado para os jogadores filtrados
+	const [suggestion, setSuggestion] = useState("");
+    const [playername, setPlayerName] = useState("");
+
 
 	const handlePlayerPress = (player) => {
 		setSelectedPlayer(player);
 		setModalVisible(true);
+		setPlayerName(player.name);
 	};
 
 	useEffect(() => {
@@ -38,6 +45,22 @@ const PlayerList = ({ players }) => {
 			setFilteredPlayers(newData);
 		} else {
 			setFilteredPlayers(players);
+		}
+	};
+
+	const handleSubmitsuggestion = async () => {
+		try {
+		const response = await axios.post(`http://10.0.2.2:2020/suggestions`, {
+			playername, suggestion
+		});
+		Alert.alert(
+			"Suggestion Submitted",
+			"Your suggestion has been submitted succesfully!"
+		);
+		setSuggestion("");
+		} catch (error) {
+		console.log(error);
+		Alert.alert("Error", "There was an error submitting your suggestion.");
 		}
 	};
 
@@ -77,7 +100,7 @@ const PlayerList = ({ players }) => {
 					<View style={styles.modalView}>
 						<TouchableOpacity
 							style={styles.modalCloseButton}
-							onPress={() => setModalVisible(!modalVisible)}
+							onPress={() => {setModalVisible(!modalVisible), setSuggestion("")}}
 						>
 							<Text style={styles.modalCloseText}>×</Text>
 						</TouchableOpacity>
@@ -89,6 +112,21 @@ const PlayerList = ({ players }) => {
 							<Text style={styles.modalInfo}>
 								Assists: {selectedPlayer?.assists}
 							</Text>
+							<Text style={styles.suggestionLabel}>Suggest data change:</Text>
+							<TextInput
+								style={styles.textsuggestion}
+								value={suggestion}
+								onChangeText={setSuggestion}
+								placeholder="Write your suggestion here"
+								multiline
+							/>
+							<Text></Text>
+							<Button
+							    style={styles.buttonsug}
+								title="Submit suggestion"
+								onPress={handleSubmitsuggestion}
+								color="#1E90FF"
+							/>
 						</View>
 					</View>
 				</View>
@@ -99,6 +137,19 @@ const PlayerList = ({ players }) => {
 
 const styles = StyleSheet.create({
 	// ... seus estilos existentes
+	buttonsug: {
+		margin: 10,
+	},
+	textsuggestion: {
+		borderWidth: 2,
+		borderRadius: 5,
+		padding: 8,
+	},
+	suggestionLabel: {
+		fontSize: 18,
+		padding: 10,
+		alignSelf: "center",
+	  },
 	searchBar: {
 		height: 40,
 		borderWidth: 1,

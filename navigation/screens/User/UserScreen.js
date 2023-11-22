@@ -57,6 +57,8 @@ export default function UserScreen({ navigation, route }) {
       />
     </View>
   );
+
+  
 }
 
 const styles = StyleSheet.create({
@@ -77,6 +79,7 @@ const styles = StyleSheet.create({
     paddingTop: 20,
     alignSelf: "flex-start",
   },
+
   input: {
     height: 100,
     marginVertical: 10,
