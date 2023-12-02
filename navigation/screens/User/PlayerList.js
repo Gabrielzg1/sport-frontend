@@ -13,15 +13,15 @@ import {
 	StatusBar,
 	Platform,
 	TouchableNativeFeedback,
-	TextInput, // importação adicional para o campo de texto
+	TextInput,
 } from "react-native";
 import axios from "axios";
 
 const PlayerList = ({ players }) => {
 	const [modalVisible, setModalVisible] = useState(false);
 	const [selectedPlayer, setSelectedPlayer] = useState(null);
-	const [searchTerm, setSearchTerm] = useState(null); // novo estado para o termo de pesquisa
-	const [filteredPlayers, setFilteredPlayers] = useState(players); // novo estado para os jogadores filtrados
+	const [searchTerm, setSearchTerm] = useState(null); 
+	const [filteredPlayers, setFilteredPlayers] = useState(players); 
 	const [suggestion, setSuggestion] = useState("");
     const [playername, setPlayerName] = useState("");
 	const [isTableVisible, setIsTableVisible] = useState(false);
@@ -169,7 +169,6 @@ const PlayerList = ({ players }) => {
 };
 
 const styles = StyleSheet.create({
-	// ... seus estilos existentes
 	scrollView: {
 		maxHeight: '100%',
 	},

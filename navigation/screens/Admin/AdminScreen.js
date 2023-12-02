@@ -42,12 +42,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    justifyContent: "flex-start", // Changed to flex-start to align items at the top
+    justifyContent: "flex-start", 
   },
   title: {
     fontSize: 26,
     fontWeight: "bold",
-    marginBottom: 20, // Added margin at the bottom
+    marginBottom: 20, 
   },
   errorText: {
     color: "red",

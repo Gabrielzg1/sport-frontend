@@ -55,6 +55,15 @@ export default function UserScreen({ navigation, route }) {
         onPress={handleSubmitReview}
         color="#1E90FF"
       />
+
+      <Button
+       title="Area Head2Head"
+       onPress={() => navigation.navigate({ name: "Head2Head" })}
+       color="#1E90FF"
+
+      />
+
+
     </View>
   );
 
